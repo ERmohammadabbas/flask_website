@@ -1,0 +1,16 @@
+{
+    "params":
+    {
+        "local_server":"True",
+        "local_uri":"mysql://root:@localhost/coding",
+        "prod_uri":"mysql://root:@localhost/coding",
+        "fb_url":"https://facebook.com/coding",
+        "tw_url":"https://twitter.com/coding",
+        "yt_url":"https://youtube.com/coding",
+        "in_url":"https://linkedin-in.com/coding",
+        "fr_url":"https://fruit.com/coding",
+        "gmail-user":"mohdabbas971960176@gmail.com",
+        "gmail-password":"eultwoqvwbykpzff"
+
+    }
+}
