@@ -1,4 +1,4 @@
-from flask import Flask,render_template,request,session,url_for
+from flask import Flask,render_template,request,session,url_for,redirect
 from flask_sqlalchemy import SQLAlchemy
 from flask_mail import Mail
 import json
@@ -32,6 +32,8 @@ class Contact(db.Model):
     name=db.Column(db.String(80),primary_key=True,unique=True,nullable=False)
     email=db.Column(db.String(80),unique=True,nullable=False)
     message=db.Column(db.String(80),unique=True,nullable=False)
+    telephone=db.Column(db.String(80),unique=True,nullable=False)
+    address=db.Column(db.String(80),unique=True,nullable=False)
 
 class Checkout(db.Model):
     fname=db.Column(db.String(80),primary_key=True,unique=True,nullable=False)
@@ -50,29 +52,21 @@ class Shop_detail(db.Model):
     email=db.Column(db.String(80),unique=True,nullable=False)
     review=db.Column(db.String(80),unique=True,nullable=False)
 
-class Cart(db.Model):
-    productID =db.Column(db.Integer,primary_key=True)
-    userID=db.Column(db.Integer,unique=True,nullable=False)
-    quantity=db.Column(db.Integer,unique=True,nullable=False)
+class Table(db.Model):
+    name=db.Column(db.String(80),primary_key=True,unique=True,nullable=False)
+    price=db.Column(db.String(80),unique=True,nullable=False)
+    quantity=db.Column(db.String(80),unique=True,nullable=False)
+    discount=db.Column(db.String(80),unique=True,nullable=False)
+    free=db.Column(db.String(80),unique=True,nullable=False)
+    percentage=db.Column(db.String(80),unique=True,nullable=False)
+    buy=db.Column(db.String(80),unique=True,nullable=False)  
 
 
 
 @app.route('/abbas',methods=['GET','POST'])
 def index():
-    productID = request.form.get("productID")
-    isInCart = Cart.query.get(productID)
-    # userID = session['userID']
-    userID = 'userID'
-    if isInCart is None:
-        c = Cart(userID=userID, productID=productID, quantity="1")
-        db.session.add(c)
-        db.session.commit()
-    else:
-        q = Cart.query.filter_by(userID=userID, productID=productID).first()
-        oldQ = q.Quantity
-        newQuantity = Cart.query.filter_by(userID=userID, productID=productID).update(dict(quantity= oldQ + 1))
-        db.session.commit() 
     return render_template('index.html',params=params)
+    
 
 @app.route('/abbas1',methods=['GET','POST'])
 def contact():
@@ -80,7 +74,9 @@ def contact():
         name=request.form.get('name')
         email=request.form.get('email')
         message=request.form.get('message')
-        entry=Contact(name=name,email=email,message=message)
+        address=request.form.get('address')
+        telephone=request.form.get('telephone')
+        entry=Contact(name=name,email=email,message=message,telephone=telephone,address=address)
         db.session.add(entry)
         db.session.commit()
         mail.send_message(
@@ -135,6 +131,7 @@ def shop_detail():
             recipients=[params['gmail-user']],
             body=review
             )
+        return redirect(url_for('abbas6'))
     return render_template('shop-detail.html',params=params) 
 
 @app.route('/abbas4')
@@ -148,22 +145,63 @@ def hello():
 @app.route('/abbas6', methods=['GET', 'POST'])
 def cart():
     if request.method == 'POST':
-        coupon_code = request.form.get('coupon_code')
-        prodcts = request.form.get('prodcts')
-        name = request.form.get('name')
+        # coupon_code = request.form.get('coupon_code')
+        productsname = request.form.get('productsname')
         price = request.form.get('price')
-        quantity = request.form.get('quantity')
         total = request.form.get('total')
-        entry=Cart(coupon_code=coupon_code,prodcts=prodcts,name=name,price=price,quantity=quantity,total=total)
+        quantity = request.form.get('quantity')
+        entry=Cart(productsname=productsname,price=price,total=total,quantity=quantity)
+        cart=Cart.query.all()
         db.session.add(entry)
         db.session.commit()
-        # subtotal = 96.00
-        # shipping_cost = 3.00
-        # total = subtotal + shipping_cost
-        # return render_template('cart.html',params=params,total=total)
     return render_template('cart.html',params=params) 
 
 
+@app.route('/abbas0')
+def apple():
+    return render_template('apple.html',params=params) 
+
+@app.route('/orange0')
+def orange():
+    return render_template('orange.html',params=params) 
+
+
+@app.route('/banana0')
+def banana():
+    return render_template('banana.html',params=params) 
+
+
+@app.route('/strawbery0')
+def strawbery():
+    return render_template('strawbery.html',params=params) 
+
+
+@app.route('/brocoli0')
+def brocoli():
+    return render_template('brocoli.html',params=params) 
+
+@app.route('/layout')
+def layout():
+    return render_template('layout.html',params=params) 
+
+@app.route('/table',methods=['GET', 'POST'])
+def table():
+    if(request.method=='POST'):
+        name=request.form.get('name')
+        price=request.form.get('price')
+        quantity=request.form.get('quantity')
+        discount=request.form.get('discount')
+        free=request.form.get('free')
+        percentage=request.form.get('percentage')
+        buy=request.form.get('buy')
+        entry=Table(name=name,price=price,quantity=quantity,discount=discount,free=free,percentage=percentage,buy=buy)
+        db.session.add(entry)
+        db.session.commit()
+    return render_template('table.html',params=params) 
+
+@app.route('/view')
+def view():
+    return render_template('view.html',params=params)
 
 if __name__ == '__main__':
     app.run(debug=True,port=5000)

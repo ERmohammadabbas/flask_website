@@ -1,0 +1,30 @@
+{% extends 'layout.html' %}
+{% block body %}
+
+
+<div class="container-fluid page-header py-5">
+<h1 class="text-center text-white display-6">Checkout</h1>
+<ol class="breadcrumb justify-content-center mb-0">
+  <li class="breadcrumb-item"><a href="/abbas">Home</a></li>
+  <li class="breadcrumb-item"><a href="/abbas">Pages</a></li>
+  <li class="breadcrumb-item active text-white">Checkout</li>
+</ol>
+</div>
+
+<div class="container-fluid contact py-5">
+  <form action="/table"  method="POST">
+      <input type="text" class="w-100 form-control border-2 py-3 mb-4" placeholder="Products Name" name="name">
+      <input type="text" class="w-100 form-control border-2 py-3 mb-4" placeholder="Enter Product Price" name="price">
+      <input type="text" class="w-100 form-control border-2 py-3 mb-4" placeholder="Enter The Quantity" name=" quantity">
+      <input type="text" class="w-100 form-control border-2 py-3 mb-4" placeholder="Discount" name="discount">
+      <input type="text" class="w-100 form-control border-2 py-3 mb-4" placeholder="Free Delivery" name="free">
+      <input type="text" class="w-100 form-control border-2 py-3 mb-4" placeholder="Percentage Off" name="percentage">
+      <input type="text" class="w-100 form-control border-2 py-3 mb-4" placeholder="Buy" name="buy">
+      <button class="w-100 btn form-control border-secondary mb-4 bg-white text-primary" type="submit">Submit</button>
+  </form>
+</div>
+
+
+    
+{% endblock %}
+
