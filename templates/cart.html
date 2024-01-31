@@ -13,7 +13,7 @@
         <!-- Single Page Header End -->
 
         <!-- Cart Page Start -->
-        <div class="container-fluid py-5">
+        <!-- <div class="container-fluid py-5">
             <div class="container py-5">
                 <div class="table-responsive">
                     <table class="table">
@@ -26,8 +26,8 @@
                             <th scope="col">Total</th>
                             <th scope="col">Handle</th>
                           </tr>
-                        </thead>
-                        <tbody>
+                        </thead> -->
+                        <!--<tbody>
                             <tr>
                                 <th scope="row">
                                     <div class="d-flex align-items-center">
@@ -137,17 +137,55 @@
                                     </button>
                                 </td>
                             </tr>
-                        </form>
-                        </tbody>
+                        </form> -->
+                        <!-- </tbody>
                     </table>
-                </div>
+                </div> -->
+
+                <div class="container-fluid py-5">
+                    <div class="container py-5">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                  <tr>
+                                    <th scope="col">S.N</th>
+                                    <th scope="col">Product Name</th>
+                                    <th scope="col">Price</th>
+                                    <th scope="col">Discount</th>
+                                    <th scope="col">Free Delivery</th>
+                                    <th scope="col">Percentage Off</th>
+                                    <th scope="col">Buy</th>
+                                    <th>Edit</th>
+                                    <th>Delete</th>
+                                   </tr>
+                                </thead>
+                            <tbody>
+
+                            {% for table in tables %}
+                            <tr>
+                                <td>{{table.sn}}</td>
+                                <td>{{table.name}}</td>
+                                <td>{{table.price}}</td>
+                                <td>{{table.discount}}</td>
+                                <td>{{table.free}}</td>
+                                <td>{{table.percentage}}</td>
+                                <td>{{table.buy}}</td>
+                                <td><a href="/edit/{{table.sn}}"><button class="btn btn-primary">Edit</button></a></td>
+                                <td><a href="/delete/{{table.sn}}"><button class="btn btn-primary">Delete</button></a></td>
+                            </tr>
+
+                            {% endfor %} 
+                    
+                            </tbody> 
+                        </table>
+                    </div>
 
                 <div class="mt-5">
                 <form action="/abbas6" class="" method="POST">
                     <input type="text" class="border-0 border-bottom rounded me-5 py-3 mb-4" placeholder="Coupon Code" name="coupon_code">
                     <button class="btn border-secondary rounded-pill px-4 py-3 text-primary" type="submit">Apply Coupon</button>
                 </form>
-                </div>
+                </div> 
 
                 <div class="row g-4 justify-content-end">
                     <div class="col-8"></div>

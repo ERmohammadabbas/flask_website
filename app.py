@@ -52,19 +52,29 @@ class Shop_detail(db.Model):
     email=db.Column(db.String(80),unique=True,nullable=False)
     review=db.Column(db.String(80),unique=True,nullable=False)
 
-class Table(db.Model):
-    name=db.Column(db.String(80),primary_key=True,unique=True,nullable=False)
+class Tables(db.Model):
+    sn=db.Column(db.Integer,primary_key=True)
+    name=db.Column(db.String(80),unique=True,nullable=False)
     price=db.Column(db.String(80),unique=True,nullable=False)
-    quantity=db.Column(db.String(80),unique=True,nullable=False)
     discount=db.Column(db.String(80),unique=True,nullable=False)
     free=db.Column(db.String(80),unique=True,nullable=False)
     percentage=db.Column(db.String(80),unique=True,nullable=False)
     buy=db.Column(db.String(80),unique=True,nullable=False)  
 
+# class Index(db.Model):
+#     tag=db.Column(db.String(80),primary_key=True)
+
+
+
 
 
 @app.route('/abbas',methods=['GET','POST'])
 def index():
+    # if request.method=='POST' and 'tag' in request.form:
+    #     tag = request.form.get('tag')
+    #     search="%{}%".format(tag)
+    #     tables=Tables.query.filter(Tables.uname.like(search)).products(per_products=products,error_out=False)
+    #     return render_template('shop-detail.html',params=params,tag=tag) 
     return render_template('index.html',params=params)
     
 
@@ -113,6 +123,7 @@ def chackout():
 
 @app.route('/abbas2')
 def shop():
+    pages=6
     return render_template('shop.html',params=params) 
 
 
@@ -132,6 +143,14 @@ def shop_detail():
             body=review
             )
         return redirect(url_for('abbas6'))
+        # if request.method=='POST' and 'tag' in request.form:
+        #     tag = request.form["tag"]
+        #     search="%{}%".format(tag)
+        #     shop_detail=Shop_detail.query.filter(Shop_detail.uname.like(search)).products(per_products=products,error_out=False)
+        #     return render_template('shop-detail.html',params=params,tag=tag) 
+        # if request.method=='POST':
+        #     tag=request.form['tag']
+        #     print(tag)
     return render_template('shop-detail.html',params=params) 
 
 @app.route('/abbas4')
@@ -142,18 +161,8 @@ def testimonial():
 def hello():
     return render_template('404.html',params=params) 
 
-@app.route('/abbas6', methods=['GET', 'POST'])
+@app.route('/abbas6')
 def cart():
-    if request.method == 'POST':
-        # coupon_code = request.form.get('coupon_code')
-        productsname = request.form.get('productsname')
-        price = request.form.get('price')
-        total = request.form.get('total')
-        quantity = request.form.get('quantity')
-        entry=Cart(productsname=productsname,price=price,total=total,quantity=quantity)
-        cart=Cart.query.all()
-        db.session.add(entry)
-        db.session.commit()
     return render_template('cart.html',params=params) 
 
 
@@ -180,28 +189,67 @@ def strawbery():
 def brocoli():
     return render_template('brocoli.html',params=params) 
 
-@app.route('/layout')
-def layout():
+@app.route('/layout',methods=['GET', 'POST'])
+def layout(): 
+    search_keyword = request.form.get("search_box")
+    results =  db.engine.execute("SELECT * FROM post "
+                           "WHERE title = search_box ")
     return render_template('layout.html',params=params) 
 
 @app.route('/table',methods=['GET', 'POST'])
 def table():
     if(request.method=='POST'):
+        sn=request.form.get('sn')
         name=request.form.get('name')
         price=request.form.get('price')
-        quantity=request.form.get('quantity')
         discount=request.form.get('discount')
         free=request.form.get('free')
         percentage=request.form.get('percentage')
         buy=request.form.get('buy')
-        entry=Table(name=name,price=price,quantity=quantity,discount=discount,free=free,percentage=percentage,buy=buy)
+        entry=Tables(sn=sn,name=name,price=price,discount=discount,free=free,percentage=percentage,buy=buy)
         db.session.add(entry)
         db.session.commit()
+        tables=Tables.query.all()
+        return render_template('cart.html',params=params,tables=tables)  
     return render_template('table.html',params=params) 
 
 @app.route('/view')
 def view():
     return render_template('view.html',params=params)
+
+@app.route('/delete/<string:sn>',methods=['GET','POST'])
+def delete(sn):
+    table=Tables.query.filter_by(sn=sn).first()
+    db.session.delete(table)
+    db.session.commit()
+    return redirect('/abbas')
+
+
+@app.route('/edit/<string:sn>',methods=['GET','POST'])
+def edit(sn):
+        if request.method=='POST':
+            sn=request.form.get('sn')
+            name=request.form.get('name')
+            price=request.form.get('price')
+            discount=request.form.get('discount')
+            free=request.form.get('free')
+            percentage=request.form.get('percentage')
+            buy=request.form.get('buy')
+            if sn=='0':
+                entry=Tables(sn=sn,name=name,price=price,discount=discount,free=free,percentage=percentage,buy=buy)
+                db.session.add(entry)
+                db.session.commit()
+            else:
+                tables=Tables.query.filter_by(sn=sn).first()
+                table.name=name
+                table.price=price
+                table.discount=discount
+                table.free=free
+                table.percentage=percentage
+                table.buy=buy
+                return redirect('/abbas/'+sn)
+        table=Tables.query.filter_by(sn=sn).first()
+        return render_template("edit.html",params=params,tables=tables)
 
 if __name__ == '__main__':
     app.run(debug=True,port=5000)
